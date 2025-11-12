@@ -1,117 +1,80 @@
-# VeeamBackup
+# Veeam Backup
 
 ## Introduction
 
-This is a backup and restore solution for Esxi with VeeamBackup
+This is a backup and restore solution for ESXi using Veeam Backup.
 
-### Backup Solution
+## Backup Solution
 
-- Connecting to Esxi Server
+### Connecting to ESXi Server
 
-1- in the inventort tab, click on the Virtual Infrastructure
+1. In the Inventory tab, click on **Virtual Infrastructure**
+2. Click on **Add Server**
+3. Click on **VMware vSphere**
+4. Click on **vSphere**
+5. Add your ESXi server domain or IP address
+6. Add your ESXi username and password
 
-2- click on the Add Server
+### Creating a Backup Job
 
-3- click on the VMware vSphere
+1. Click on the ESXi server on the left side (Virtual Infrastructure section)
+2. Right-click on the VM that you want to backup
+3. Click **Add to Backup Job**
+4. Click **New Job**
+5. Add a name for the job
+6. Select your VM
+7. Select the backup repository
 
-4- click on the vSphere
+## Restore Solution
 
-5- add your Esxi server domain or ip address
+### Method 1: Using Veeam Backup & Replication Software
 
-6- add your Esxi username and password
+1. In the Home tab of Veeam Backup, click on the **Restore** section
+2. Click on **VMware vSphere**
+3. Click on **Restore from backup**
+4. Click on **Entire VM restore**
+5. Click on the **Add** button to add your backup VM
+6. Click on **Restore to a new location, or with different settings** (if you want to restore to a different directory)
+7. Click on your VM and host
+8. Click on the default resource pool
+9. Click on the default datastore
+10. Choose a name for the new VM
+11. Click on the default network
+12. Done!
 
-- Create a backup job
+### Method 2: Restoring a VM Without Veeam Backup & Replication Software
 
-1- click on the esxi server at the left side ( virtual infrastructure section )
+#### Using Veeam.Backup.Extractor.exe to Convert the Backup to a .vmdk File
 
-2- Right click on the VM that you want to backup
+1. Choose the backup file
+2. Choose the target folder where the files will be extracted
 
-3- click Add to Backup Job
+#### Sending Extracted Files to the ESXi Server Datastore
 
-4- click New Job
+You can do this in two ways:
 
-5- add a name for the job
+**Option A: Via ESXi Web Console**
 
-6- select your VM
+1. In the ESXi web console, go to the **Datastores** section
+2. Click on **Datastore Browser**
+3. Upload the files
 
-7- select the backup repository
+**Option B: Via External Hard Drive**
 
+1. Move backup files to an external hard drive and connect it to the ESXi server
+2. Set up a Windows VM for accessing the hard drive
+3. In the Windows VM page of the ESXi UI, click on **Edit** at the top of the screen
+4. Click **Add Other Devices**
+5. First, add a USB controller
+6. Then, add a USB device (the usbarbitrator should be enabled on the ESXi server)
 
-### Restore Solution
+   ```bash
+   /etc/init.d/usbarbitrator start
+   chkconfig usbarbitrator on
+   ```
 
-1- using Veeam backuo & replication software
-
-1- in Home tab of veeam backup, click on the restore section
-
-2- click on the VMware vSphere
-
-3- click on the Restore from backup
-
-4- click on the Entire VM restore
-
-5- Entire VM restore
-
-6- click on the Add button add your backup vm
-
-7- click on the Restore to a new location, or with different settings ( if you want to restore to a different directory )
-
-8- click on your vm and host
-
-9- click on the default resource pool
-
-10- click on the default datastore
-
-11- choose a name for the new vm
-
-12- click on the default network
-
-13- and Done!
-
-
-
-
-2- restoring a vm without Veeam Backup & Replication software
-
-- Using Veeam.Backup.Extractor.exe to convert the backup to a .vmdk file
-
-1- chose the backup file
-
-2- chose the target folder where the files will be extracted
-
-
-- Send extracted files to the Esxi server datastore
-
-You can do this in two ways
-
-A- in esxi web console, go to the datastores section and click on datastore browser and upload the files
-
-B- move backup files to an external hard drive and connect it to the esxi server. then :
-
-1- setup a windows vm for accessing the hard drive
-
-2- in windows VM page of esxi ui, click on the edit in top of the screen
-
-3- click add other devices
-
-4- first, add a usb controller
-
-5- then, add a usb device ( the usbarbitrator should be on in the esxi server )
-
-```
-/etc/init.d/usbarbitrator start
-
-chkconfig usbarbitrator on
-```
-
-6- boot the windows vm and install a tool like winscp to access the hard drive and esxi datastore
-
-7- move all of the extracted files to the esxi datastore located at /vmfs/volumes/YOUR DATASTORE NAME
-
-8- head back to the esxi web console and click on the datastore browser and you should see the files
-
-9- right click on the file with .vmx extension and click on register vm
-
-10- you should see the vm restored in Virtual Machines section 
-
-
-
+7. Boot the Windows VM and install a tool like WinSCP to access the hard drive and ESXi datastore
+8. Move all of the extracted files to the ESXi datastore located at `/vmfs/volumes/YOUR_DATASTORE_NAME`
+9. Head back to the ESXi web console and click on the **Datastore Browser** and you should see the files
+10. Right-click on the file with `.vmx` extension and click **Register VM**
+11. You should see the restored VM in the **Virtual Machines** section
