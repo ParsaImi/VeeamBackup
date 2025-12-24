@@ -46,7 +46,7 @@ This is a backup and restore solution for ESXi using Veeam Backup.
 
 #### Using Veeam.Backup.Extractor.exe to Convert the Backup to a .vmdk File
 
-1. Choose the backup file
+1. Choose the backup file ( the latest VBK file should be the one you want to restore )
 2. Choose the target folder where the files will be extracted
 
 #### Sending Extracted Files to the ESXi Server Datastore
